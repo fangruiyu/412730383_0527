@@ -8,6 +8,10 @@ https://www.tensorflow.org/hub/tutorials/movenet
 let video, bodypose, pose, keypoint, detector;
 let poses = [];
 
+function preload(){
+  noseImg = loadImage("nose.png")
+}
+
 async function init() {
   const detectorConfig = {
     modelType: poseDetection.movenet.modelType.MULTIPOSE_LIGHTNING,
@@ -54,12 +58,12 @@ function draw() {
   image(cam, 0, 0);
 }
 
-function drawSkeleton() {       //偵測出各點，並畫出線條      
+function drawSkeleton() {
   // Draw all the tracked landmark points
   for (let i = 0; i < poses.length; i++) {
     pose = poses[i];
     // shoulder to wrist
-    for (j = 5; j < 9; j++) {     //
+    for (j = 5; j < 9; j++) {
       if (pose.keypoints[j].score > 0.1 && pose.keypoints[j + 2].score > 0.1) {
         partA = pose.keypoints[j];
         partB = pose.keypoints[j + 2];
@@ -83,21 +87,25 @@ function drawSkeleton() {       //偵測出各點，並畫出線條
     //eyes
     partL = pose.keypoints[1];
     partR = pose.keypoints[2];
-    if(partL.score>0.1)
+    if(partL.score > 0.1)
     {
       ellipse(partL.x,partL.y,50)
     }
-    if(partR.score>0.1)
+    if(partR.score > 0.1)
     {
       ellipse(partR.x,partR.y,50)
     }
+
+    //nose
     partA = pose.keypoints[0];
-    if(partA.score>0.1)
+    if(partA.score > 0.1)
     {
-      fill("#ff0000")
-      ellipse(partA.x,partA.y,50)
-      fill("#ffffff")
+      //fill("#ff0000")
+      //ellipse(partA.x,partA.y,50)
+      //fill("#ffffff")
+      image(noseImg,partA.x-25,partA.y-25,50,50)
     }
+
     // shoulders to hips
     partA = pose.keypoints[5];
     partB = pose.keypoints[11];
